@@ -27,7 +27,7 @@ func recHelper(obj interface{}, path []string) interface{} {
 
 	currentStep, remainingPath := path[0], path[1:]
 
-	if reflect.TypeOf(obj).Name() == "Map" {
+	if reflect.TypeOf(obj).Kind().String() == "map" {
 		parsedObj := obj.(map[string]interface{})
 		return recHelper(parsedObj[currentStep], remainingPath)
 	}
