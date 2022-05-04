@@ -1,3 +1,1 @@
-module deepfinder.go
-
-go 1.18
+module github.com/parada3desu/deepfinder.go
