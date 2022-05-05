@@ -1,7 +1,9 @@
 package deepfinder
 
 import (
+	"fmt"
 	"reflect"
+	"strconv"
 	"strings"
 )
 
@@ -27,9 +29,55 @@ func recHelper(obj interface{}, path []string) interface{} {
 
 	currentStep, remainingPath := path[0], path[1:]
 
+	fmt.Println(reflect.TypeOf(obj).Kind().String())
+
 	if reflect.TypeOf(obj).Kind().String() == "map" {
-		parsedObj := obj.(map[string]interface{})
-		return recHelper(parsedObj[currentStep], remainingPath)
+		dict := obj.(map[string]interface{})
+		return recHelper(dict[currentStep], remainingPath)
+	}
+
+	if reflect.TypeOf(obj).Kind().String() == "list" {
+		list := obj.([]interface{})
+		if currentStep == "*" {
+			var res []interface{} // TODO: optimize this
+			for _, subObj := range list {
+				res = append(res, recHelper(subObj, remainingPath))
+			}
+			return res
+		}
+
+		if currentStep == "?*" || currentStep == "*?" {
+			var res []interface{}
+			for _, subObj := range list {
+				subRes := recHelper(subObj, remainingPath)
+				if subRes != nil {
+					res = append(res, subRes)
+				}
+			}
+			return res
+		}
+
+		if currentStep == "?" {
+			var res []interface{}
+			for _, subObj := range list {
+				subRes := recHelper(subObj, remainingPath)
+				if subRes != nil {
+					return subRes
+				}
+			}
+			return res
+		}
+
+		numericCurrentStep, err := strconv.Atoi(currentStep)
+		if err != nil {
+			return nil
+		}
+
+		if numericCurrentStep >= len(list) {
+			return nil
+		}
+
+		return recHelper(list[numericCurrentStep], remainingPath)
 	}
 	return nil
 }
