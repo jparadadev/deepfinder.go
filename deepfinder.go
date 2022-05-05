@@ -1,7 +1,6 @@
 package deepfinder
 
 import (
-	"fmt"
 	"reflect"
 	"strconv"
 	"strings"
@@ -28,8 +27,6 @@ func recHelper(obj interface{}, path []string) interface{} {
 	}
 
 	currentStep, remainingPath := path[0], path[1:]
-
-	fmt.Println(reflect.TypeOf(obj).Kind().String())
 
 	if reflect.TypeOf(obj).Kind().String() == "map" {
 		dict := obj.(map[string]interface{})
