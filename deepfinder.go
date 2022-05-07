@@ -28,12 +28,14 @@ func recHelper(obj interface{}, path []string) interface{} {
 
 	currentStep, remainingPath := path[0], path[1:]
 
-	if reflect.TypeOf(obj).Kind().String() == "map" {
+	objType := reflect.TypeOf(obj).Kind().String()
+
+	if objType == "map" {
 		dict := obj.(map[string]interface{})
 		return recHelper(dict[currentStep], remainingPath)
 	}
 
-	if reflect.TypeOf(obj).Kind().String() == "list" {
+	if objType == "list" || objType == "slice" {
 		list := obj.([]interface{})
 		if currentStep == "*" {
 			var res []interface{} // TODO: optimize this
