@@ -31,3 +31,15 @@ func TestDictWith2Lvl(t *testing.T) {
 	result := deepfinder.DeepFind(data, "value.subdata")
 	assert.EqualValues(t, result, 39)
 }
+
+func TestDictWith3Lvl(t *testing.T) {
+	var data interface{} = map[string]interface{}{
+		"value": map[string]interface{}{
+			"subdata": map[string]interface{}{
+				"subsubdata": 39,
+			},
+		},
+	}
+	result := deepfinder.DeepFind(data, "value.subdata.subsubdata")
+	assert.EqualValues(t, result, 39)
+}
