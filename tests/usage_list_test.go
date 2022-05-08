@@ -41,3 +41,13 @@ func TestEmbeddedList(t *testing.T) {
 	result := deepfinder.DeepFind(data, "values.1")
 	assert.EqualValues(t, "b", result)
 }
+
+func TestFirstValueInDictInList(t *testing.T) {
+	data := map[string]interface{}{"values": []interface{}{
+		map[string]interface{}{"value": "a"},
+		map[string]interface{}{"value": "b"},
+		map[string]interface{}{"value": "c"},
+	}}
+	result := deepfinder.DeepFind(data, "values.0.value")
+	assert.EqualValues(t, "a", result)
+}
