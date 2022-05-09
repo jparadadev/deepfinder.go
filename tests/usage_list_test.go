@@ -61,3 +61,23 @@ func TestAllValuesInDictInList(t *testing.T) {
 	result := deepfinder.DeepFind(data, "values.*.value")
 	assert.EqualValues(t, []interface{}{"a", "b", "c"}, result)
 }
+
+func TestExistingPathInDictInList(t *testing.T) {
+	data := map[string]interface{}{"values": []interface{}{
+		map[string]interface{}{"nya": "a"},
+		map[string]interface{}{"value": "b"},
+		map[string]interface{}{"nya": "c"},
+	}}
+	result := deepfinder.DeepFind(data, "values.?.value")
+	assert.EqualValues(t, "b", result)
+}
+
+func TestAllValuesOfAListInList(t *testing.T) {
+	data := map[string]interface{}{"all-values": []interface{}{
+		map[string]interface{}{"values": []interface{}{"a"}},
+		map[string]interface{}{"values": []interface{}{"b", "c", "d"}},
+		map[string]interface{}{"values": []interface{}{"e"}},
+	}}
+	result := deepfinder.DeepFind(data, "all-values.*.values")
+	assert.EqualValues(t, []interface{}{[]interface{}{"a"}, []interface{}{"b", "c", "d"}, []interface{}{"e"}}, result)
+}
