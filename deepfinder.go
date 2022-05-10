@@ -57,14 +57,13 @@ func recHelper(obj interface{}, path []string) interface{} {
 		}
 
 		if currentStep == "?" {
-			var res []interface{}
 			for _, subObj := range list {
 				subRes := recHelper(subObj, remainingPath)
 				if subRes != nil {
 					return subRes
 				}
 			}
-			return res
+			return nil
 		}
 
 		numericCurrentStep, err := strconv.Atoi(currentStep)

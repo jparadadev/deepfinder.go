@@ -81,3 +81,43 @@ func TestAllValuesOfAListInList(t *testing.T) {
 	result := deepfinder.DeepFind(data, "all-values.*.values")
 	assert.EqualValues(t, []interface{}{[]interface{}{"a"}, []interface{}{"b", "c", "d"}, []interface{}{"e"}}, result)
 }
+
+func TestCompleteListInList(t *testing.T) {
+	data := map[string]interface{}{
+		"all-values": []interface{}{[]interface{}{"a"}, []interface{}{"b", "c", "d"}, []interface{}{"e"}},
+	}
+	result := deepfinder.DeepFind(data, "all-values.*")
+	assert.EqualValues(t, []interface{}{[]interface{}{"a"}, []interface{}{"b", "c", "d"}, []interface{}{"e"}}, result)
+}
+
+func TestCompleteListInListInTwoSteps(t *testing.T) {
+	data := map[string]interface{}{
+		"all-values": []interface{}{[]interface{}{"a"}, []interface{}{"b", "c", "d"}, []interface{}{"e"}},
+	}
+	result := deepfinder.DeepFind(data, "all-values.*.*")
+	assert.EqualValues(t, []interface{}{[]interface{}{"a"}, []interface{}{"b", "c", "d"}, []interface{}{"e"}}, result)
+}
+
+func TestExistingPathOfAListInsideList(t *testing.T) {
+	data := map[string]interface{}{
+		"all-values": []interface{}{[]interface{}{"a"}, []interface{}{"b", "c", "d"}, []interface{}{"e"}},
+	}
+	result := deepfinder.DeepFind(data, "all-values.?.2")
+	assert.EqualValues(t, "d", result)
+}
+
+func TestExistingPathInsideExistingPath(t *testing.T) {
+	data := map[string]interface{}{
+		"all-values": []interface{}{
+			[]interface{}{"a"},
+			[]interface{}{
+				"b",
+				map[string]interface{}{"correct": "correct"},
+				"d",
+			},
+			[]interface{}{"e"},
+		},
+	}
+	result := deepfinder.DeepFind(data, "all-values.?.?.correct")
+	assert.EqualValues(t, "correct", result)
+}
